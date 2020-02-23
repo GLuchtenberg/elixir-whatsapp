@@ -1,4 +1,5 @@
-defaults: &defaults # working_directory: ~/repo
+defaults: &defaults
+  working_directory: ~/repo
   docker:
     - image: circleci/node:8.0
 
@@ -61,7 +62,8 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run: ls
-      - run: cd web && yarn test:cover
+      - run: pwd
+      - run: yarn test:cover
 
       - persist_to_workspace:
           root: ~/repo
