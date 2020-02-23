@@ -61,7 +61,7 @@ jobs:
           command: cd web && yarn lint
 
   test:
-    <<: *defaults-web
+    <<: *defaults
 
     steps:
       - attach_workspace:
