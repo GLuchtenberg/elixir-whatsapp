@@ -30,7 +30,7 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
-      -run: ls -lah
+      - run: ls -lah
       - run:
           name: Install Dependencies
           command: cd web && yarn install
