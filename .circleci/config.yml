@@ -4,8 +4,6 @@ defaults: &defaults
     - image: circleci/node:12.16
 webAtFolder: &webFolder
   at: web
-webRootFolter: &webRootFolter
-  root: web
 
 whitelist: &whitelist
   paths:
@@ -44,7 +42,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - persist_to_workspace:
-          <<: *webRootFolter
+          root: web
           <<: *whitelist
 
   lint:
@@ -68,7 +66,7 @@ jobs:
       - run: cd web && yarn test:cover
 
       - persist_to_workspace:
-        <<: *webRootFolter
+          root: web
           <<: *whitelist
 
   coveralls:
