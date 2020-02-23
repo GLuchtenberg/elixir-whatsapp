@@ -57,7 +57,7 @@ jobs:
   test:
     <<: *defaults
 
-    working_directory: ~/repo/web
+    - working_directory: ~/repo/web
     steps:
       - attach_workspace:
           at: ~/repo
