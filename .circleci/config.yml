@@ -3,11 +3,6 @@ defaults: &defaults
   docker:
     - image: circleci/node:8.0
 
-defaults-web: &defaults-web
-  working_directory: ~/repo/web
-  docker:
-    - image: circleci/node:8.0
-
 whitelist: &whitelist
   paths:
     - .npmignore
@@ -66,10 +61,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
-      - run:
-          name: Test TypeScript code
-          command: cd web
-          command: yarn test:cover
+      - run: cd web && yarn test:cover
 
       - persist_to_workspace:
           root: ~/repo
