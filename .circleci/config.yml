@@ -2,7 +2,7 @@ defaults: &defaults
   working_directory: ~/repo
   docker:
     - image: circleci/node:8.0
-defaults-web: &defaults
+defaults-web: &defaults-web
   working_directory: ~/repo/web
   docker:
     - image: circleci/node:8.0
