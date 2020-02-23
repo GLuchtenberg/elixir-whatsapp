@@ -60,7 +60,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
-
+      working_directory: ~/repo/web
       - run:
           name: Test TypeScript code
           command: cd web && yarn test:cover
