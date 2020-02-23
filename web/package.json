@@ -20,7 +20,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:cover": "react-scripts test --coverage",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "yarn eslint . --ext .tsx,.ts",
+    "lint:all": "yarn eslint . --ext .tsx,.ts --no-ignore"
   },
   "eslintConfig": {
     "extends": "react-app"
