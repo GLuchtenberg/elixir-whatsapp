@@ -1,4 +1,3 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 defaults: &defaults
   working_directory: ~/repo
   docker:
@@ -18,31 +17,19 @@ whitelist: &whitelist
     - README.md
     - tsconfig.json
     - tslint.json
-
-version: 2.1
-
-# # Use a package of configuration called an orb.
-# orbs:
-#   # Declare a dependency on the welcome-orb
-#   welcome: circleci/welcome-orb@0.4.1
-# # Orchestrate or schedule a set of jobs
-# workflows:
-#   # Name the workflow "welcome"
-#   welcome:
-#     # Run the welcome/run job in its own container
-#     jobs:
-#       - welcome/run
-# workflows:
-# test-backend:
+version: 2
 jobs:
   checkout:
     <<: *defaults
+
     steps:
       - checkout
+
       - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json"}}
-          - v1-dependencies-
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+
       - run:
           name: Install Dependencies
           command: yarn install
@@ -55,6 +42,7 @@ jobs:
       - persist_to_workspace:
           root: ~/repo
           <<: *whitelist
+
   lint:
     <<: *defaults
 
@@ -80,6 +68,7 @@ jobs:
       - persist_to_workspace:
           root: ~/repo
           <<: *whitelist
+
   coveralls:
     <<: *defaults
 
@@ -106,70 +95,35 @@ jobs:
           root: ~/repo
           <<: *whitelist
 
-  # jobs: # basic units of work in a run
-  build-backend: # runs not using Workflows must have a `build` job as entry point
-    parallelism: 1 # run only one instance of this job
-    docker: # run the steps with Docker
-      - image: circleci/elixir:1.7.3 # ...with this image as the primary container; this is where all `steps` will run
-        environment: # environment variables for primary container
-          MIX_ENV: test
-          TERM: xterm
-      - image: circleci/postgres:10.1-alpine # database image
-        environment: # environment variables for database
-          POSTGRES_USER: postgres
-          POSTGRES_DB: app_test
-          POSTGRES_PASSWORD: 132456
-          TERM: xterm
+  deploy:
+    <<: *defaults
 
-    working_directory: ~/app # directory where steps will run
+    steps:
+      - attach_workspace:
+          at: ~/repo
 
-    steps: # commands that comprise the `build` job
-      - checkout # check out source code to working directory
+      - run:
+          name: Write NPM Token to ~/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
 
-      - run: cd api && mix local.hex --force # install Hex locally (without prompt)
-      - run: cd api && mix local.rebar --force # fetch a copy of rebar (without prompt)
+      - run:
+          name: Install dot-json package
+          command: npm install dot-json
 
-      - restore_cache: # restores saved mix cache
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          keys: # list of cache keys, in decreasing specificity
-            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v1-mix-cache-{{ .Branch }}
-            - v1-mix-cache
-      - restore_cache: # restores saved build cache
-          keys:
-            - v1-build-cache-{{ .Branch }}
-            - v1-build-cache
-      - run: cd api && mix do deps.get, compile # get updated dependencies & compile them
-      - save_cache: # generate and store mix cache
-          key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-          paths: "deps"
-      - save_cache: # make another, less specific cache
-          key: v1-mix-cache-{{ .Branch }}
-          paths: "deps"
-      - save_cache: # you should really save one more cache (just in case)
-          key: v1-mix-cache
-          paths: "deps"
-      - save_cache: # don't forget to save a *build* cache, too
-          key: v1-build-cache-{{ .Branch }}
-          paths: "_build"
-      - save_cache: # and one more build cache for good measure
-          key: v1-build-cache
-          paths: "_build"
+      - run:
+          name: Write version to package.json
+          command: $(yarn bin)/dot-json package.json version ${CIRCLE_TAG:1}
 
-      - run: # special utility that stalls main process until DB is ready
-          name: Wait for DB
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Publish to NPM
+          command: npm publish --access=public
 
-      - run: cd api && mix test # run all tests in project
-
-      - store_test_results: # upload junit test results for display in Test Summary
-          # Read more: https://circleci.com/docs/2.0/collect-test-data/
-          path: _build/test/lib/gwap
 workflows:
+  version: 2
+
   build:
     jobs:
       - checkout
-      - build-backend
       - test:
           requires:
             - checkout
@@ -179,7 +133,57 @@ workflows:
       - coveralls:
           requires:
             - test
-      - build-frontend:
+      - build:
           requires:
             - test
             - lint
+
+  release:
+    jobs:
+      - checkout:
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+      - test:
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+          requires:
+            - checkout
+      - lint:
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+          requires:
+            - checkout
+      - coveralls:
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+          requires:
+            - test
+      - build:
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+          requires:
+            - test
+            - lint
+      - deploy:
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+          requires:
+            - build
