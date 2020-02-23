@@ -62,7 +62,7 @@ jobs:
       - attach_workspace:
           at: web
 
-      - run: cd web && ls
+      - run: cd web && ls && cat package.json && cd src && ls
       - run: cd web && pwd
       - run: cd web && yarn test:cover
 
