@@ -41,7 +41,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - persist_to_workspace:
-          root: ~/repo
+          root: web
           <<: *whitelist
 
   lint:
@@ -60,13 +60,13 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: ~/repo
+          at: web
       - run: ls
       - run: pwd
       - run: yarn test:cover
 
       - persist_to_workspace:
-          root: ~/repo
+          root: web
           <<: *whitelist
 
   coveralls:
