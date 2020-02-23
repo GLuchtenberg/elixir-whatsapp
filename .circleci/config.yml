@@ -2,6 +2,7 @@ defaults: &defaults
   working_directory: ~/repo
   docker:
     - image: circleci/node:8.0
+
 defaults-web: &defaults-web
   working_directory: ~/repo/web
   docker:
@@ -21,6 +22,7 @@ whitelist: &whitelist
     - README.md
     - tsconfig.json
     - tslint.json
+
 version: 2
 jobs:
   checkout:
@@ -66,7 +68,8 @@ jobs:
           at: ~/repo
       - run:
           name: Test TypeScript code
-          command: cd web && yarn test:cover
+          command: cd web
+          command: yarn test:cover
 
       - persist_to_workspace:
           root: ~/repo
