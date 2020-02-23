@@ -1,5 +1,5 @@
 defaults: &defaults
-  working_directory: ~/repo/web
+  working_directory: ~/repo
   docker:
     - image: circleci/node:8.0
 
@@ -147,6 +147,7 @@ workflows:
             branches:
               ignore: /.*/
       - test:
+          working_directory: ~/repo/web # directory where steps will run
           filters:
             tags:
               only: /v[0-9]+(\.[0-9]+)*/
