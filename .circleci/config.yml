@@ -1,5 +1,4 @@
-defaults: &defaults
-  working_directory: ~/repo
+defaults: &defaults # working_directory: ~/repo
   docker:
     - image: circleci/node:8.0
 
