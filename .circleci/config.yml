@@ -30,7 +30,6 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
-      - run: ls -lah
       - run:
           name: Install Dependencies
           command: cd web && yarn install
@@ -53,7 +52,7 @@ jobs:
 
       - run:
           name: Lint TypeScript code
-          command: cd web && yarn lint
+          command: cd web && yarn lint:all
 
   test:
     <<: *defaults
