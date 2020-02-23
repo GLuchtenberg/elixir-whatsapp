@@ -52,7 +52,7 @@ jobs:
 
       - run:
           name: Lint TypeScript code
-          command: yarn lint
+          command: cd web && yarn lint
 
   test:
     <<: *defaults
@@ -63,7 +63,7 @@ jobs:
 
       - run:
           name: Test TypeScript code
-          command: yarn test:cover
+          command: cd web && yarn test:cover
 
       - persist_to_workspace:
           root: ~/repo
@@ -78,7 +78,7 @@ jobs:
 
       - run:
           name: Submit coverage report to Coveralls.io
-          command: yarn coveralls
+          command: cd web && yarn coveralls
 
   build:
     <<: *defaults
@@ -89,7 +89,7 @@ jobs:
 
       - run:
           name: Build TypeScript code
-          command: yarn build
+          command: cd web && yarn build
 
       - persist_to_workspace:
           root: ~/repo
