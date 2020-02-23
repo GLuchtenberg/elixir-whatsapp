@@ -61,9 +61,9 @@ jobs:
     steps:
       # - attach_workspace:
       #     at: web
-      - run: ls
-      - run: pwd
-      - run: yarn test:cover
+      - run: cd web && ls
+      - run: cd web && pwd
+      - run: cd web && yarn test:cover
 
       - persist_to_workspace:
           root: web
