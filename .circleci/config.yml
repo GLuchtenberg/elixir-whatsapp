@@ -59,8 +59,9 @@ jobs:
     <<: *defaults
 
     steps:
-      # - attach_workspace:
-      #     at: web
+      - attach_workspace:
+          at: web
+
       - run: ls
       - run: cd web && pwd
       - run: cd web && yarn test:cover
