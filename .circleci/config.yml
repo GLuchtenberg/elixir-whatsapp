@@ -61,7 +61,7 @@ jobs:
     steps:
       # - attach_workspace:
       #     at: web
-      - run: cd web && ls
+      - run: ls
       - run: cd web && pwd
       - run: cd web && yarn test:cover
 
