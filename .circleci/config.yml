@@ -145,7 +145,6 @@ workflows:
             branches:
               ignore: /.*/
       - test:
-          working_directory: ~/repo # directory where steps will run
           filters:
             tags:
               only: /v[0-9]+(\.[0-9]+)*/
