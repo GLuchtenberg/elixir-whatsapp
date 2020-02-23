@@ -2,7 +2,7 @@ defaults: &defaults
   working_directory: ~/repo
   docker:
     - image: circleci/node:12.16
-webAtFolder: &webFolder
+webFolder: &webFolder
   at: web
 
 whitelist: &whitelist
@@ -50,7 +50,7 @@ jobs:
 
     steps:
       - attach_workspace:
-        <<: *webFolder
+          at: web
 
       - run:
           name: Lint TypeScript code
@@ -61,7 +61,7 @@ jobs:
 
     steps:
       - attach_workspace:
-        <<: *webFolder
+          at: web
 
       - run: cd web && yarn test:cover
 
