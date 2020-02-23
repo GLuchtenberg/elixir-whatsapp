@@ -61,7 +61,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
-      - run: ls && cd web && yarn test:cover
+      - run: ls
+      - run: cd web && yarn test:cover
 
       - persist_to_workspace:
           root: ~/repo
