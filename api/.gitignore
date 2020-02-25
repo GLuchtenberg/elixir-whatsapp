@@ -27,3 +27,4 @@ cwap-*.tar
 # this depending on your deployment strategy.
 /priv/static/
 dev.secrets.exs
+.elixir_ls
