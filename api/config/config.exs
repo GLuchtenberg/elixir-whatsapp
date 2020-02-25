@@ -26,6 +26,14 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :cwap, CwapWeb.Auth.Guardian,
+  issuer: "cwap",
+  secret_key: "9f94QS6xG9a4sQnP14YmY16jcgszUVgVtWHlKoAgDMX4c0zdg6s18f5sY6Y7TP8V"
+
+# config :cwap, CwapWeb.Auth.Guardian,
+#   issuer: "cwap",
+#   secret_key: "dNPZpWyx16+a6fOuts2NgPZz2pFCoFsg/VSKKRubvMTBZ9wfWFaegoEdU5dJKbgf"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
