@@ -6,8 +6,9 @@ config :cwap, Cwap.Repo,
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
-  #username: "postgres",
-  #password: "postgres",
+
+# username: "postgres",
+# password: "postgres",
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
